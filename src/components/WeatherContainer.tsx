@@ -6,7 +6,7 @@ const ForecastCard = styled.div`
   display: grid;
   grid-template-rows: repeat(1fr);
   grid-gap: 10px;
-  border: 2px solid grey;
+  border: 2px solid #38A8A9;
   border-radius: 10px;
   max-width: 140px;
   background: white;
