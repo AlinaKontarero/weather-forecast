@@ -9,6 +9,7 @@ const ForecastCard = styled.div`
   border: 2px solid grey;
   border-radius: 10px;
   max-width: 140px;
+  background: white;
 `;
 
 interface Props {

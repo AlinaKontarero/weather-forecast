@@ -1,8 +1,10 @@
 import * as React from "react";
-import "./App.css";
-import CitySearch from "./components/CitySearch";
-import WeatherContainer from "./components/WeatherContainer";
-import { DayForecast } from "./types";
+import "../styles/App.css";
+import CitySearch from "./CitySearch";
+import WeatherContainer from "./WeatherContainer";
+import { DayForecast } from "../types";
+import ForecastLayout from "./ForecastsLayout";
+import Footer from "./Footer";
 
 const App = () => {
   const forecast: DayForecast = {
@@ -23,10 +25,20 @@ const App = () => {
     predictability: 25,
   };
   return (
+    // <AppWrapper>
+
+    
     <div className="App">
       <CitySearch />
-      <WeatherContainer forecast={forecast} />
+      <ForecastLayout>
+        <WeatherContainer forecast={forecast} />
+        <WeatherContainer forecast={forecast} />
+        <WeatherContainer forecast={forecast} />
+        <WeatherContainer forecast={forecast} />
+      </ForecastLayout>
+      <Footer />
     </div>
+    // </AppWrapper>
   );
 };
 
