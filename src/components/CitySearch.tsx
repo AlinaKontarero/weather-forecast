@@ -28,42 +28,24 @@ const CitySearch = () => {
       if (!loading) {
         return undefined;
       }
-
+  
       (async () => {
-        try {
-          const res = await fetch('https://www.metaweather.com/api/location/search/?query=san', {
-            mode: 'no-cors'
-          });
-      
-          if (res.status >= 400) {
-            throw new Error("Bad response from server");
+        const response = await fetch('https://cors-anywhere.herokuapp.com/metaweather.com/api/location/search/?query=san', {
+          headers: { 
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
           }
-      
-          const user = await res.json();
-      
-          console.log(user);
-        } catch (err) {
-          console.error(err);
+        });
+
+        await sleep(1e3); // For demo purposes.
+        const city = await response.json();
+
+        console.log('city:::: ', city)
+  
+        if (active) {
+          setOptions(Object.keys(city).map((key) => city[key].item[0]) as CountryType[]);
         }
       })();
-  
-      // (async () => {
-      //   const response = await fetch('https://cors-anywhere.herokuapp.com/metaweather.com/api/location/search/?query=san', {
-      //     headers: { 
-      //       'Content-Type': 'application/json',
-      //       'Access-Control-Allow-Origin': '*'
-      //     }
-      //   });
-
-      //   await sleep(1e3); // For demo purposes.
-      //   const city = await response.json();
-
-      //   console.log('city:::: ', city)
-  
-      //   if (active) {
-      //     setOptions(Object.keys(city).map((key) => city[key].item[0]) as CountryType[]);
-      //   }
-      // })();
   
       return () => {
         active = false;
@@ -95,6 +77,7 @@ const CitySearch = () => {
         renderInput={(params) => (
           <TextField
             {...params}
+            color='secondary'
             label="Asynchronous"
             variant="outlined"
             InputProps={{

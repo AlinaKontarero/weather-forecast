@@ -7,9 +7,10 @@ const FooterWrapper = styled.div`
   justify-content: center;
   align-items: flex-end;
   width: 100%;
-  color: white;
+  color:#F73C4F;
   *.linkedin-link {
-    color: white;
+    text-decoration: none;
+    color:#F73C4F;
     font-weight: bold;
     &:hover {
       color: #012B81

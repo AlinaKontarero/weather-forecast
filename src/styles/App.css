@@ -1,9 +1,9 @@
 .App {
   text-align: center;
-  background: url('../assets/Blue.jpg');
-  background-position: center; /* Center the image */
+  background: url('../assets/Girl.png');
+  background-position: bottom right;
   background-repeat: no-repeat; /* Do not repeat the image */
-  background-size: cover; /* Resize the background image to cover the entire container */
+  /* background-size: cover; /* Resize the background image to cover the entire container */
   height: 100vh;
   display: grid;
   grid-template-rows: repeat(3, 1fr);
