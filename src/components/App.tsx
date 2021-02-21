@@ -27,7 +27,6 @@ const App = () => {
   return (
     // <AppWrapper>
 
-    
     <div className="App">
       <CitySearch />
       <ForecastLayout>

@@ -13,7 +13,7 @@ const ItemsLayout = styled.div`
 `;
 
 interface Props {
-  children: JSX.Element[]
+  children: JSX.Element[];
 }
 
 const ForecastLayout = (props: Props) => {
