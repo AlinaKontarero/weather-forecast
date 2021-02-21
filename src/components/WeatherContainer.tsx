@@ -6,9 +6,10 @@ const ForecastCard = styled.div`
   display: grid;
   grid-template-rows: repeat(1fr);
   grid-gap: 10px;
-  border: 2px solid grey;
+  border: 2px solid #38a8a9;
   border-radius: 10px;
   max-width: 140px;
+  background: white;
 `;
 
 interface Props {
@@ -16,14 +17,6 @@ interface Props {
 }
 
 const WeatherComponent = (props: Props) => {
-  const isToday =
-    parseInt(props.forecast.applicable_date) == Date.now()
-      ? "Today"
-      : undefined;
-  const isTomorrow =
-    parseInt(props.forecast.applicable_date) == Date.now() + 1
-      ? "Tomorrow"
-      : undefined;
   return (
     <ForecastCard>
       <div>{props.forecast.applicable_date}</div>
@@ -36,4 +29,3 @@ const WeatherComponent = (props: Props) => {
 };
 
 export default WeatherComponent;
-//https://github.com/andrewjackson95/metaweatherUI/blob/master/src/app/search-page/search-page.component.ts
