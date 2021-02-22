@@ -1,10 +1,10 @@
 .App {
   text-align: center;
   background: url("../assets/Girl.png");
-  background-position: bottom right;
-  background-repeat: no-repeat; /* Do not repeat the image */
-  /* background-size: cover; /* Resize the background image to cover the entire container */
+  background-position: right;
+  background-repeat: no-repeat;
   height: 100vh;
   display: grid;
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: 1fr 2fr 1fr;
+  justify-content: center;
 }

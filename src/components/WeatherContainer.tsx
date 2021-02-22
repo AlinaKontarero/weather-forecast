@@ -10,6 +10,19 @@ const ForecastCard = styled.div`
   border-radius: 10px;
   max-width: 140px;
   background: white;
+  justify-items: start;
+  padding: 15px;
+  @media (max-width: 280px) {
+    min-width: 220px !important;
+  };
+  @media (max-width: 640px) {
+    min-width: 268px;
+    x-overflow: hidden;
+  };
+  @media (max-width: 768px) {
+    min-width: 268px;
+  };
+
 `;
 
 interface Props {
