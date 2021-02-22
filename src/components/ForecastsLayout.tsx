@@ -21,6 +21,7 @@ const ItemsLayout = styled.div`
 `;
 
 interface Props {
+  location: Location
   children: JSX.Element[];
 }
 

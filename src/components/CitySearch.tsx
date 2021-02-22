@@ -11,11 +11,16 @@ const SearchWrapper = styled.div`
   align-items: center;
   padding: 20px 20px 0 20px;
 `;
+
+interface Props {
+  onSelect: () => void 
+}
 // https://www.youtube.com/watch?v=n2OL8BXJyZI&ab_channel=GrokProgramming
-const CitySearch = () => {
+const CitySearch = (props: Props) => {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState<Location[]>([]);
   const loading = open && options.length === 0;
+  const [query, setQuery] = React.useState('s');
 
   React.useEffect(() => {
     let active = true;
@@ -27,13 +32,15 @@ const CitySearch = () => {
     (async () => {
       const proxyUrl = "https://cors-anywhere.herokuapp.com/";
       const url = "https://www.metaweather.com/api/location/search";
-      const response = await fetch(`${proxyUrl + url}/?query=s`, {
+      const response = await fetch(`${proxyUrl + url}/?query=${query}`, {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         }        
       });
       const places = await response.json();
+
+      console.log('query::::: ', query)
 
       if (active && places.length > 0) {
         setOptions(places as Location[]);
@@ -51,11 +58,21 @@ const CitySearch = () => {
     }
   }, [open]);
 
+  const onChangeFn = (value: Location | null) => {
+    console.log('value')
+    if(!!value) {
+      setQuery(value.title)
+    } else setQuery('s')
+    // else setQuery to qurrent point for the browser
+  }
+
   return (
     <SearchWrapper>
       <Autocomplete
         id="asynchronous-demo"
-        style={{ minWidth: 250, width: '100%' }}
+        style={{ minWidth: 250 }}
+        fullWidth={true}
+        noOptionsText="Cannot find that place. Please try again."
         open={open}
         onOpen={() => {
           setOpen(true);
@@ -68,6 +85,7 @@ const CitySearch = () => {
         options={options}
         loading={loading}
         includeInputInList
+        onChange={(event, value)=> onChangeFn(value)}
         renderInput={(params) => (
           <TextField
             {...params}
