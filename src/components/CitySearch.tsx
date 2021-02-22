@@ -13,8 +13,9 @@ const SearchWrapper = styled.div`
 `;
 
 interface Props {
-  onSelect: () => void 
+  onSelect: (value?: Location) => void;
 }
+
 // https://www.youtube.com/watch?v=n2OL8BXJyZI&ab_channel=GrokProgramming
 const CitySearch = (props: Props) => {
   const [open, setOpen] = React.useState(false);
@@ -61,9 +62,9 @@ const CitySearch = (props: Props) => {
   const onChangeFn = (value: Location | null) => {
     console.log('value')
     if(!!value) {
-      setQuery(value.title)
+      props.onSelect(value)
     } else setQuery('s')
-    // else setQuery to qurrent point for the browser
+    // else setQuery to current point for the browser
   }
 
   return (
