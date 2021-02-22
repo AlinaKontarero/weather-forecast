@@ -2,7 +2,6 @@ import * as React from "react";
 import CircularProgress from '@material-ui/core/CircularProgress'
 import "../styles/App.css";
 import CitySearch from "./CitySearch";
-import WeatherContainer from "./WeatherContainer";
 // import { DayForecast } from "../types";
 import ForecastLayout from "./ForecastsLayout";
 import Footer from "./Footer";

@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { DayForecast } from "../types";
+import { numberFormatter } from "../utils/numberFormatter";
 
 const ForecastCard = styled.div`
   display: grid;
@@ -12,6 +13,8 @@ const ForecastCard = styled.div`
   background: white;
   justify-items: start;
   padding: 15px;
+  text-align: start;
+  font-size: 14px;
   @media (max-width: 280px) {
     min-width: 220px !important;
   };
@@ -22,23 +25,29 @@ const ForecastCard = styled.div`
   @media (max-width: 768px) {
     min-width: 268px;
   };
-
+  .description {
+    color: #414449;
+    font-style: italic;
+  }
 `;
 
 interface Props {
   forecast: DayForecast;
 }
 
-const WeatherComponent = (props: Props) => {
+const DayForecastCard = (props: Props) => {
+  const maxT = numberFormatter(props.forecast.max_temp)
+  const minT = numberFormatter(props.forecast.min_temp)
+  const windSpeed = numberFormatter(props.forecast.wind_speed, 1)
   return (
     <ForecastCard>
       <div>{props.forecast.applicable_date}</div>
-      <div>General description: {props.forecast.weather_state_name}</div>
-      <div>Max: {props.forecast.max_temp} °C</div>
-      <div>Min: {props.forecast.min_temp} °C</div>
-      <div>Wind speed: {props.forecast.wind_speed} mph</div>
+      <div className='description'>{props.forecast.weather_state_name}</div>
+      <div>Max: {maxT}°C</div>
+      <div>Min: {minT}°C</div>
+      <div>Wind speed: {windSpeed} mph</div>
     </ForecastCard>
   );
 };
 
-export default WeatherComponent;
+export default DayForecastCard;

@@ -2,9 +2,9 @@ import * as React from "react";
 import styled from "styled-components";
 import { makeid } from "../utils/makeid";
 import { DayForecast, Location } from "../types";
-import WeatherComponent from "./WeatherContainer";
 import useWeather from "../hooks/useWeather";
 import { CircularProgress } from "@material-ui/core";
+import DayForecastCard from "./DayForecast";
 
 const ItemsLayout = styled.div`
   display: grid;
@@ -36,7 +36,9 @@ const ForecastLayout = (props: Props) => {
   return (
     <ItemsLayout>
       {Array.isArray(forecast) 
-      ? <>{forecast.map(f => <WeatherComponent forecast={f} key={makeid()} />)}</>
+      ? <>{forecast
+            .slice(0, 4)
+            .map(f => <DayForecastCard forecast={f} key={makeid()} />)}</>
       : <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '15px'}} />
     }
     </ItemsLayout>
