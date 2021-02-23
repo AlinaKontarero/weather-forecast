@@ -29,6 +29,12 @@ export type DayForecast = {
   predictability: number;
 };
 
-export type FourDaysForecast = {
-  consolidated_weather: DayForecast[];
-};
+export type Coordinates = {
+  accuracy: number;
+  altitude: number | null;
+  altitudeAccuracy: number | null;
+  heading: number | null;
+  latitude: number;
+  longitude: number;
+  speed: number | null;
+}

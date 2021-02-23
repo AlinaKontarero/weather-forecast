@@ -5,22 +5,35 @@ import CitySearch from "./CitySearch";
 // import { DayForecast } from "../types";
 import ForecastLayout from "./ForecastsLayout";
 import Footer from "./Footer";
-import { Location, DayForecast } from "../types";
+import { Location, Coordinates } from "../types";
 
 const App = () => {
   const [location, setLocation] = React.useState<Location>();
+  const [coords, setCoords] = React.useState<Coordinates>();
   
   
   const onSelectLocation = React.useCallback((value?: Location) => {
     setLocation(value);
   }, []);
+
+  React.useEffect(() => {
+    if ("geolocation" in navigator) {
+      console.log(navigator.geolocation)
+      navigator.geolocation.getCurrentPosition((position) =>  {
+        setCoords(position.coords)
+      });
+    } else {
+      console.log("Browser geolocation is not available");
+    }
+  }, []);
   
+  console.log('coords:::: ', coords)
 
   return (
     // <AppWrapper>
 
     <div className="App">
-      <CitySearch onSelect={onSelectLocation} />
+      <CitySearch onSelect={onSelectLocation} browserCoordinates={coords} />
       {
         location 
         ? (<ForecastLayout location={location} />

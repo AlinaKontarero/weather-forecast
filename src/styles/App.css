@@ -1,3 +1,13 @@
+:root {
+  --white: #fff;
+  --pink:  #f93d66;
+  --violet: #6d47d9;
+  --text: #012B81;
+  --background: #EAEAEC;
+  --primary: #F83C4B;
+  --secondary: #38A8A9;
+}
+
 .App {
   text-align: center;
   background: url("../assets/Girl.png");

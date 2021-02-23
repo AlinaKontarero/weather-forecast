@@ -2,7 +2,7 @@ import * as React from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { CircularProgress, TextField } from "@material-ui/core";
 import styled from "styled-components";
-import { Location } from "../types";
+import { Coordinates, Location } from "../types";
 
 const SearchWrapper = styled.div`
   display: flex;
@@ -14,6 +14,7 @@ const SearchWrapper = styled.div`
 
 interface Props {
   onSelect: (value?: Location) => void;
+  browserCoordinates?: Coordinates
 }
 
 // https://www.youtube.com/watch?v=n2OL8BXJyZI&ab_channel=GrokProgramming
@@ -23,6 +24,8 @@ const CitySearch = (props: Props) => {
   const loading = open && options.length === 0;
   const [query, setQuery] = React.useState('s');
 
+  console.log('broser ', props.browserCoordinates)
+
   React.useEffect(() => {
     let active = true;
 
@@ -30,9 +33,24 @@ const CitySearch = (props: Props) => {
       return undefined;
     }
 
+    if(!!props.browserCoordinates) {
+      console.log('hello')
+    }
+
     (async () => {
       const proxyUrl = "https://cors-anywhere.herokuapp.com/";
       const url = "https://www.metaweather.com/api/location/search";
+      if(!!props.browserCoordinates) {
+       
+        const response = await fetch(`${proxyUrl + url}/?lattlong=(${props.browserCoordinates.latitude}),(${props.browserCoordinates.longitude})`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }        
+        });
+        const br = await response.json()
+        console.log('brrrrr::: ', br)
+      }
       const response = await fetch(`${proxyUrl + url}/?query=${query}`, {
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +58,7 @@ const CitySearch = (props: Props) => {
         }        
       });
       const places = await response.json();
-
+      // console.log(props.getLoc())
       console.log('query::::: ', query)
 
       if (active && places.length > 0) {
