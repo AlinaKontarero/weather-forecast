@@ -1,4 +1,6 @@
-export const searchLocations = (query: string): string =>
-  `/search/?query=${query}`;
 
-export const getLocationWeather = (woeid: number): string => `/${woeid}`;
+
+const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+const url = "https://www.metaweather.com/api/location/search";
+
+export const baseUrl = `${proxyUrl + url}`

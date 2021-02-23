@@ -17,7 +17,7 @@ const fetchWeather = (woeid: number) => {
   return response
 }
 
-function useWeather(woeid: number){
+const useWeather = (woeid: number) => {
   const [forecast, setForecast] = useState<DayForecast[] | null>();
   async function reload() {
     try {

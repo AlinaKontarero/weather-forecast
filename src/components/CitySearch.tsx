@@ -3,6 +3,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { CircularProgress, TextField } from "@material-ui/core";
 import styled from "styled-components";
 import { Coordinates, Location } from "../types";
+import { baseUrl } from "../utils/api-config";
 
 const SearchWrapper = styled.div`
   display: flex;
@@ -17,116 +18,85 @@ interface Props {
   browserCoordinates?: Coordinates
 }
 
-// https://www.youtube.com/watch?v=n2OL8BXJyZI&ab_channel=GrokProgramming
-const CitySearch = (props: Props) => {
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState<Location[]>([]);
-  const loading = open && options.length === 0;
-  const [query, setQuery] = React.useState('s');
+interface State {
+  open: boolean
+  options: Location[]
+  query: string | undefined
+}
 
-  console.log('broser ', props.browserCoordinates)
+class CitySearch extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = { 
+      open: false,
+      options: [],
+      query: undefined
+     }
+  }
 
-  React.useEffect(() => {
-    let active = true;
-
-    if (!loading) {
-      return undefined;
-    }
-
-    if(!!props.browserCoordinates) {
-      console.log('hello')
-    }
-
-    (async () => {
-      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-      const url = "https://www.metaweather.com/api/location/search";
-      if(!!props.browserCoordinates) {
-       
-        const response = await fetch(`${proxyUrl + url}/?lattlong=(${props.browserCoordinates.latitude}),(${props.browserCoordinates.longitude})`, {
+  private setSearchQuery = (v: string) => {
+    this.setState({ query: v}, async () => {
+      
+      if(!!this.state.query) {
+        const response = await fetch(`${baseUrl}/?query=${this.state.query}`, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           }        
         });
-        const br = await response.json()
-        console.log('brrrrr::: ', br)
+        const places = await response.json();
+      
+        if (places.length > 0) {
+          this.setState({ options: places });
+        }
       }
-      const response = await fetch(`${proxyUrl + url}/?query=${query}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }        
-      });
-      const places = await response.json();
-      // console.log(props.getLoc())
-      console.log('query::::: ', query)
-
-      if (active && places.length > 0) {
-        setOptions(places as Location[]);
-      }
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [loading]);
-
-  React.useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
-
-  const onChangeFn = (value: Location | null) => {
-    console.log('value')
-    if(!!value) {
-      props.onSelect(value)
-    } else setQuery('s')
-    // else setQuery to current point for the browser
+    })
   }
 
-  return (
-    <SearchWrapper>
-      <Autocomplete
-        id="asynchronous-demo"
-        style={{ minWidth: 250 }}
-        fullWidth={true}
-        noOptionsText="Cannot find that place. Please try again."
-        open={open}
-        onOpen={() => {
-          setOpen(true);
-        }}
-        onClose={() => {
-          setOpen(false);
-        }}
-        getOptionSelected={(option, value) => option.title === value.title}
-        getOptionLabel={(option) => option.title}
-        options={options}
-        loading={loading}
-        includeInputInList
-        onChange={(event, value)=> onChangeFn(value)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            color="secondary"
-            label="Select place"
-            variant="outlined"
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <React.Fragment>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
-                  {params.InputProps.endAdornment}
-                </React.Fragment>
-              ),
-            }}
-          />
-        )}
-      />
-    </SearchWrapper>
-  );
-};
+  public render() {
+    return (
+      <SearchWrapper>
+        <Autocomplete
+          style={{ minWidth: 250 }}
+          fullWidth={true}
+          noOptionsText="Please add city to search"
+          open={this.state.open}
+          onOpen={() => {
+            this.setState({open: true});
+          }}
+          onClose={() => {
+            this.setState({open: false});
+          }}
+          getOptionSelected={(option, value) => option.title === value.title}
+          getOptionLabel={(option) => option.title}
+          options={this.state.options}
+          loading={this.state.options.length < 1}
+          includeInputInList
+          onChange={(event, value)=> this.props.onSelect(value as Location)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              color="secondary"
+              label="Select place"
+              variant="outlined"
+              onChange={(event) => this.setSearchQuery(event.target.value)}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <React.Fragment>
+                    {this.state.options.length < 1 && !!this.state.query ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                ),
+              }}
+            />
+          )}
+        />
+      </SearchWrapper>
+    );
+  }
+}
 
 export default CitySearch;
