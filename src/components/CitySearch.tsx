@@ -27,7 +27,12 @@ const CitySearch = () => {
     (async () => {
       const proxyUrl = "https://cors-anywhere.herokuapp.com/";
       const url = "https://www.metaweather.com/api/location/search";
-      const response = await fetch(`${proxyUrl + url}/?query=san`);
+      const response = await fetch(`${proxyUrl + url}/?query=s`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }        
+      });
       const places = await response.json();
 
       if (active && places.length > 0) {
@@ -50,7 +55,7 @@ const CitySearch = () => {
     <SearchWrapper>
       <Autocomplete
         id="asynchronous-demo"
-        style={{ width: 300 }}
+        style={{ minWidth: 250, width: '100%' }}
         open={open}
         onOpen={() => {
           setOpen(true);
@@ -62,6 +67,7 @@ const CitySearch = () => {
         getOptionLabel={(option) => option.title}
         options={options}
         loading={loading}
+        includeInputInList
         renderInput={(params) => (
           <TextField
             {...params}
