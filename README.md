@@ -23,6 +23,6 @@ To run the app on your localhost, please be sure you switched on https://github.
 - API and icons [metaweather.com](https://www.metaweather.com/api/)
 - Background image by [Olga Kuznetsova](https://dribbble.com/shots/14993677-girl-with-umbrella)
 
-# To run tests:
+# Test
 
 - run `npm test` from the root folder
