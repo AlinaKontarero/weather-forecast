@@ -1,8 +1,9 @@
 import * as React from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { CircularProgress, TextField } from "@material-ui/core";
+import { CircularProgress, TextField, WithStyles, withStyles } from "@material-ui/core";
 import styled from "styled-components";
-import { Location } from "../types";
+import {  Location } from "../types";
+import { baseUrl } from "../utils/api-config";
 
 const SearchWrapper = styled.div`
   display: flex;
@@ -12,103 +13,104 @@ const SearchWrapper = styled.div`
   padding: 20px 20px 0 20px;
 `;
 
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   onSelect: (value?: Location) => void;
 }
 
-// https://www.youtube.com/watch?v=n2OL8BXJyZI&ab_channel=GrokProgramming
-const CitySearch = (props: Props) => {
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState<Location[]>([]);
-  const loading = open && options.length === 0;
-  const [query, setQuery] = React.useState('s');
+interface State {
+  open: boolean
+  options: Location[]
+  query: string | undefined
+}
 
-  React.useEffect(() => {
-    let active = true;
-
-    if (!loading) {
-      return undefined;
-    }
-
-    (async () => {
-      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-      const url = "https://www.metaweather.com/api/location/search";
-      const response = await fetch(`${proxyUrl + url}/?query=${query}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }        
-      });
-      const places = await response.json();
-
-      console.log('query::::: ', query)
-
-      if (active && places.length > 0) {
-        setOptions(places as Location[]);
-      }
-    })();
-
-    return () => {
-      active = false;
-    };
-  }, [loading]);
-
-  React.useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
-
-  const onChangeFn = (value: Location | null) => {
-    console.log('value')
-    if(!!value) {
-      props.onSelect(value)
-    } else setQuery('s')
-    // else setQuery to current point for the browser
+class CitySearch extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = { 
+      open: false,
+      options: [],
+      query: undefined
+     }
   }
 
-  return (
-    <SearchWrapper>
-      <Autocomplete
-        id="asynchronous-demo"
-        style={{ minWidth: 250 }}
-        fullWidth={true}
-        noOptionsText="Cannot find that place. Please try again."
-        open={open}
-        onOpen={() => {
-          setOpen(true);
-        }}
-        onClose={() => {
-          setOpen(false);
-        }}
-        getOptionSelected={(option, value) => option.title === value.title}
-        getOptionLabel={(option) => option.title}
-        options={options}
-        loading={loading}
-        includeInputInList
-        onChange={(event, value)=> onChangeFn(value)}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            color="secondary"
-            label="Select place"
-            variant="outlined"
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <React.Fragment>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
-                  {params.InputProps.endAdornment}
-                </React.Fragment>
-              ),
-            }}
-          />
-        )}
-      />
-    </SearchWrapper>
-  );
-};
+  private setSearchQuery = (v: string) => {
+    this.props.onSelect()
+    this.setState({ query: v}, async () => {
+      if(!!this.state.query) {
+        const response = await fetch(`${baseUrl}/?query=${this.state.query}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }        
+        });
+        const places = await response.json();
+      
+        if (places.length > 0) {
+          this.setState({ options: places });
+        }
+      }
+    })
+  }
 
-export default CitySearch;
+  public render() {
+
+    const classes = this.props.classes;
+
+    return (
+      <SearchWrapper>
+        <Autocomplete
+          noOptionsText="Please add city to search"
+          open={this.state.open}
+          onOpen={() => {
+            this.setState({open: true});
+          }}
+          onClose={() => {
+            this.setState({open: false});
+          }}
+          getOptionSelected={(option, value) => option.title === value.title}
+          getOptionLabel={(option) => option.title}
+          options={this.state.options}
+          loading={this.state.options.length < 1}
+          includeInputInList
+          onChange={(event, value)=> this.props.onSelect(value as Location)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              color="secondary"
+              label="Select place"
+              variant="outlined"
+              onChange={(event) => this.setSearchQuery(event.target.value)}
+              classes={{ root: classes.root }}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <React.Fragment>
+                    {this.state.options.length < 1 && !!this.state.query ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                ),
+              }}
+            />
+          )}
+        />
+      </SearchWrapper>
+    );
+  }
+}
+
+const styles = {
+  root: {
+    minWidth: '420px',
+    '@media (max-width: 768px)': {
+      width: '100%',
+      minWidth: '298px'
+    },
+    '@media (max-width: 280px)': {
+      minWidth: '250px'
+    }
+  }
+}
+
+export default withStyles(styles)(CitySearch);

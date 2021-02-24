@@ -17,22 +17,23 @@ const fetchWeather = (woeid: number) => {
   return response
 }
 
-function useWeather(woeid: number){
+const useWeather = (woeid: number) => {
   const [forecast, setForecast] = useState<DayForecast[] | null>();
   async function reload() {
     try {
       setForecast(null);
       setForecast(await fetchWeather(woeid));
     } catch (e) {
+      alert('Please be sure you switched cors-anywhere.herokuapp.com')
       console.error(e);
     }
   }
 
   useEffect(() => {
     reload();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return [forecast, reload];
+  return [forecast];
 }
 
 export default useWeather;
-// https://medium.com/@deepak13245/using-react-hooks-to-handle-api-calls-d6bb4ae91188

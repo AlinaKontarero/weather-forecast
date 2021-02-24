@@ -7,13 +7,13 @@ const FooterWrapper = styled.div`
   justify-content: center;
   align-items: flex-end;
   width: 100%;
-  color: #f73c4f;
+  color: var(--primary);
   *.linkedin-link {
     text-decoration: none;
-    color: #f73c4f;
+    color: var(--primary);
     font-weight: bold;
     &:hover {
-      color: #012b81;
+      color: var(--text)
     }
   }
 `;
