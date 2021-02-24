@@ -76,6 +76,7 @@ class CitySearch extends React.Component<Props, State> {
           renderInput={(params) => (
             <TextField
               {...params}
+              data-testid="cityInput"
               color="secondary"
               label="Select place"
               variant="outlined"
