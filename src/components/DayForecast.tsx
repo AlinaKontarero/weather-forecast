@@ -24,15 +24,24 @@ const ForecastCard = styled.div`
     0 100px 80px rgba(0, 0, 0, 0.12);
   @media (max-width: 280px) {
     min-width: 220px !important;
+    .forecast-item {
+      font-size: 14px !important;
+    }
   }
   @media (max-width: 640px) {
     min-width: 268px;
     x-overflow: hidden;
     font-size: 14px;
+    .forecast-item {
+      font-size: 14px !important;
+    }
   }
   @media (max-width: 768px) {
     min-width: 268px;
     font-size: 14px;
+    .forecast-item {
+      font-size: 14px !important;
+    }
   }
 
   .description {

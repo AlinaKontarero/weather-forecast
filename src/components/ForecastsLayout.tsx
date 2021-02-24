@@ -1,8 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
+import { CircularProgress, withStyles, WithStyles } from "@material-ui/core";
 import { makeid } from "../utils/makeid";
 import useWeather from "../hooks/useWeather";
-import { CircularProgress } from "@material-ui/core";
 import DayForecastCard from "./DayForecast";
 
 const ItemsLayout = styled.div`
@@ -22,12 +22,13 @@ const ItemsLayout = styled.div`
   } ;
 `;
 
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   woeid: number;
 }
 
 const ForecastLayout = (props: Props) => {
   const [forecast] = useWeather(props.woeid);
+  const classes = props.classes;
   return (
     <ItemsLayout>
       {Array.isArray(forecast) ? (
@@ -37,13 +38,20 @@ const ForecastLayout = (props: Props) => {
           ))}
         </>
       ) : (
-        <CircularProgress
-          color="secondary"
-          style={{ marginLeft: "45%", marginTop: "15px" }}
-        />
+        <CircularProgress color="secondary" classes={{ root: classes.root }} />
       )}
     </ItemsLayout>
   );
 };
 
-export default ForecastLayout;
+const styles = {
+  root: {
+    marginTop: "15px",
+    marginLeft: "90%",
+    "@media (max-width: 768px)": {
+      marginLeft: 0,
+    },
+  },
+};
+
+export default withStyles(styles)(ForecastLayout);
