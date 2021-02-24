@@ -13,7 +13,7 @@ const FooterWrapper = styled.div`
     color: var(--primary);
     font-weight: bold;
     &:hover {
-      color: var(--text)
+      color: var(--text);
     }
   }
 `;

@@ -19,7 +19,7 @@ const ItemsLayout = styled.div`
   @media (max-width: 640px) {
     display: flex;
     flex-direction: column;
-  };
+  } ;
 `;
 
 interface Props {

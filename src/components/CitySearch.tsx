@@ -1,8 +1,13 @@
 import * as React from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { CircularProgress, TextField, WithStyles, withStyles } from "@material-ui/core";
+import {
+  CircularProgress,
+  TextField,
+  WithStyles,
+  withStyles,
+} from "@material-ui/core";
 import styled from "styled-components";
-import {  Location } from "../types";
+import { Location } from "../types";
 import { baseUrl } from "../utils/api-config";
 
 const SearchWrapper = styled.div`
@@ -18,42 +23,41 @@ interface Props extends WithStyles<typeof styles> {
 }
 
 interface State {
-  open: boolean
-  options: Location[]
-  query: string | undefined
+  open: boolean;
+  options: Location[];
+  query: string | undefined;
 }
 
 class CitySearch extends React.Component<Props, State> {
   constructor(props: Props) {
-    super(props)
-    this.state = { 
+    super(props);
+    this.state = {
       open: false,
       options: [],
-      query: undefined
-     }
+      query: undefined,
+    };
   }
 
   private setSearchQuery = (v: string) => {
-    this.props.onSelect()
-    this.setState({ query: v}, async () => {
-      if(!!this.state.query) {
+    this.props.onSelect();
+    this.setState({ query: v }, async () => {
+      if (!!this.state.query) {
         const response = await fetch(`${baseUrl}/?query=${this.state.query}`, {
           headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }        
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
         });
         const places = await response.json();
-      
+
         if (places.length > 0) {
           this.setState({ options: places });
         }
       }
-    })
-  }
+    });
+  };
 
   public render() {
-
     const classes = this.props.classes;
 
     return (
@@ -62,20 +66,21 @@ class CitySearch extends React.Component<Props, State> {
           noOptionsText="Please add city to search"
           open={this.state.open}
           onOpen={() => {
-            this.setState({open: true});
+            this.setState({ open: true });
           }}
           onClose={() => {
-            this.setState({open: false});
+            this.setState({ open: false });
           }}
           getOptionSelected={(option, value) => option.title === value.title}
           getOptionLabel={(option) => option.title}
           options={this.state.options}
           loading={this.state.options.length < 1}
           includeInputInList
-          onChange={(event, value)=> this.props.onSelect(value as Location)}
+          onChange={(event, value) => this.props.onSelect(value as Location)}
           renderInput={(params) => (
             <TextField
               {...params}
+              data-testid="cityInput"
               color="secondary"
               label="Select place"
               variant="outlined"
@@ -102,15 +107,15 @@ class CitySearch extends React.Component<Props, State> {
 
 const styles = {
   root: {
-    minWidth: '420px',
-    '@media (max-width: 768px)': {
-      width: '100%',
-      minWidth: '298px'
+    minWidth: "420px",
+    "@media (max-width: 768px)": {
+      width: "100%",
+      minWidth: "298px",
     },
-    '@media (max-width: 280px)': {
-      minWidth: '250px'
-    }
-  }
-}
+    "@media (max-width: 280px)": {
+      minWidth: "250px",
+    },
+  },
+};
 
 export default withStyles(styles)(CitySearch);
