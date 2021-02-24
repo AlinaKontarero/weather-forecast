@@ -14,8 +14,8 @@ To run the app on your localhost, please be sure you switched on https://github.
 - I can see icons according to each type of weather
 - I can see the min and max degree each day
 - I can see wind speed
-- I can request my current location forecast (if browser supports geolocation)
-- I can see the weather as default, preferably my current location (if browser supports geolocation, and the user shares it)
+- I can request my current location forecast (if browser supports geolocation, and it is under the browser permission)
+- I can see the weather as default, preferably my current location (if browser supports geolocation, and the user shares it,  and it is under the browser permission)
 
 # Credits
 
