@@ -20,25 +20,29 @@ const ItemsLayout = styled.div`
   @media (max-width: 640px) {
     display: flex;
     flex-direction: column;
-  };
+  } ;
 `;
 
 interface Props {
-  woeid: number
+  woeid: number;
 }
 
 const ForecastLayout = (props: Props) => {
-  const [forecast] = useWeather(props.woeid)
+  const [forecast] = useWeather(props.woeid);
   return (
     <ItemsLayout>
-      {Array.isArray(forecast) 
-      ? <>
-          {forecast
-            .slice(0, 4)
-            .map(f => <DayForecastCard forecast={f} key={makeid()} />)}
+      {Array.isArray(forecast) ? (
+        <>
+          {forecast.slice(0, 4).map((f) => (
+            <DayForecastCard forecast={f} key={makeid()} />
+          ))}
         </>
-      : <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '15px'}} />
-    }
+      ) : (
+        <CircularProgress
+          color="secondary"
+          style={{ marginLeft: "45%", marginTop: "15px" }}
+        />
+      )}
     </ItemsLayout>
   );
 };

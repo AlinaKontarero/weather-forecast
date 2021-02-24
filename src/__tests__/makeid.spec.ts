@@ -1,6 +1,6 @@
-import { makeid } from '../utils/makeid';
+import { makeid } from "../utils/makeid";
 
-describe('makeid', () => {
+describe("makeid", () => {
   const instance1 = {
     key: makeid(),
   };
@@ -14,19 +14,18 @@ describe('makeid', () => {
     key: Date.now(),
   };
 
-  it('sets unique key', () => {
+  it("sets unique key", () => {
     expect(instance1.key).not.toEqual(instance2.key);
   });
 
-  it('is not undefined', () => {
+  it("is not undefined", () => {
     expect(instance1.key).not.toEqual(instance3.key);
   });
-  it('is not equal to now moment', () => {
+  it("is not equal to now moment", () => {
     expect(instance1.key).not.toEqual(instance4.key);
   });
 
-  it('is not Null', () => {
+  it("is not Null", () => {
     expect(instance1.key).not.toBeNull();
   });
-
 });
