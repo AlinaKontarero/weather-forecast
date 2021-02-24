@@ -7,7 +7,6 @@ import DayForecastCard from "./DayForecast";
 
 const ItemsLayout = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
   grid-gap: 24px;
   justify-items: center;
   align-items: center;
@@ -24,21 +23,25 @@ const ItemsLayout = styled.div`
 `;
 
 interface Props {
-  woeid: number
+  woeid: number;
 }
 
 const ForecastLayout = (props: Props) => {
-  const [forecast] = useWeather(props.woeid)
+  const [forecast] = useWeather(props.woeid);
   return (
     <ItemsLayout>
-      {Array.isArray(forecast) 
-      ? <>
-          {forecast
-            .slice(0, 4)
-            .map(f => <DayForecastCard forecast={f} key={makeid()} />)}
+      {Array.isArray(forecast) ? (
+        <>
+          {forecast.slice(0, 4).map((f) => (
+            <DayForecastCard forecast={f} key={makeid()} />
+          ))}
         </>
-      : <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '15px'}} />
-    }
+      ) : (
+        <CircularProgress
+          color="secondary"
+          style={{ marginLeft: "45%", marginTop: "15px" }}
+        />
+      )}
     </ItemsLayout>
   );
 };
