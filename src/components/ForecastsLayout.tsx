@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
 import { makeid } from "../utils/makeid";
-import { Location } from "../types";
 import useWeather from "../hooks/useWeather";
 import { CircularProgress } from "@material-ui/core";
 import DayForecastCard from "./DayForecast";
@@ -25,13 +24,11 @@ const ItemsLayout = styled.div`
 `;
 
 interface Props {
-  location: Location
-  children?: JSX.Element[];
+  woeid: number
 }
 
 const ForecastLayout = (props: Props) => {
-  const [forecast, reload ] = useWeather(props.location.woeid)
- 
+  const [forecast] = useWeather(props.woeid)
   return (
     <ItemsLayout>
       {Array.isArray(forecast) 

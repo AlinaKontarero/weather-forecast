@@ -1,8 +1,8 @@
 import * as React from "react";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { CircularProgress, TextField } from "@material-ui/core";
+import { CircularProgress, TextField, WithStyles, withStyles } from "@material-ui/core";
 import styled from "styled-components";
-import { Coordinates, Location } from "../types";
+import {  Location } from "../types";
 import { baseUrl } from "../utils/api-config";
 
 const SearchWrapper = styled.div`
@@ -13,9 +13,8 @@ const SearchWrapper = styled.div`
   padding: 20px 20px 0 20px;
 `;
 
-interface Props {
+interface Props extends WithStyles<typeof styles> {
   onSelect: (value?: Location) => void;
-  browserCoordinates?: Coordinates
 }
 
 interface State {
@@ -35,8 +34,8 @@ class CitySearch extends React.Component<Props, State> {
   }
 
   private setSearchQuery = (v: string) => {
+    this.props.onSelect()
     this.setState({ query: v}, async () => {
-      
       if(!!this.state.query) {
         const response = await fetch(`${baseUrl}/?query=${this.state.query}`, {
           headers: {
@@ -54,11 +53,12 @@ class CitySearch extends React.Component<Props, State> {
   }
 
   public render() {
+
+    const classes = this.props.classes;
+
     return (
       <SearchWrapper>
         <Autocomplete
-          style={{ minWidth: 250 }}
-          fullWidth={true}
           noOptionsText="Please add city to search"
           open={this.state.open}
           onOpen={() => {
@@ -80,6 +80,7 @@ class CitySearch extends React.Component<Props, State> {
               label="Select place"
               variant="outlined"
               onChange={(event) => this.setSearchQuery(event.target.value)}
+              classes={{ root: classes.root }}
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (
@@ -99,4 +100,17 @@ class CitySearch extends React.Component<Props, State> {
   }
 }
 
-export default CitySearch;
+const styles = {
+  root: {
+    minWidth: '420px',
+    '@media (max-width: 768px)': {
+      width: '100%',
+      minWidth: '298px'
+    },
+    '@media (max-width: 280px)': {
+      minWidth: '250px'
+    }
+  }
+}
+
+export default withStyles(styles)(CitySearch);

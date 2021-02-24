@@ -1,51 +1,64 @@
 import * as React from "react";
-import CircularProgress from '@material-ui/core/CircularProgress'
-import "../styles/App.css";
 import CitySearch from "./CitySearch";
-// import { DayForecast } from "../types";
 import ForecastLayout from "./ForecastsLayout";
 import Footer from "./Footer";
 import { Location, Coordinates } from "../types";
+import { baseUrl } from "../utils/api-config";
+import "../styles/App.css";
 
-const App = () => {
-  const [location, setLocation] = React.useState<Location>();
-  const [coords, setCoords] = React.useState<Coordinates>();
-  
-  
-  const onSelectLocation = React.useCallback((value?: Location) => {
-    setLocation(value);
-  }, []);
+interface State {
+  coords?: Coordinates
+  locationWoeid?: number
+}
 
-  React.useEffect(() => {
+class App extends React.Component<{}, State> {
+  constructor(props: {}) {
+    super(props)
+    this.state = { 
+      coords: undefined, 
+      locationWoeid: undefined
+    }
+  }
+
+  public componentDidMount() {
     if ("geolocation" in navigator) {
-      console.log(navigator.geolocation)
       navigator.geolocation.getCurrentPosition((position) =>  {
-        setCoords(position.coords)
+        this.setState({coords: position.coords}, async () => {
+          if(!!this.state.coords) {
+            const response = await fetch(`${baseUrl}/?lattlong=${this.state.coords.latitude},${this.state.coords.longitude}`)
+            const possiblePlace = await response.json()
+            if (possiblePlace.length > 0) {
+              this.setState({ locationWoeid: possiblePlace[0].woeid });
+              alert('Forecast is based on your browser geolocation data')
+            }
+          }
+        })
       });
     } else {
-      console.log("Browser geolocation is not available");
+      alert("Browser geolocation is not available");
     }
-  }, []);
-  
-  console.log('coords:::: ', coords)
+  }
 
-  return (
-    // <AppWrapper>
+  private  onSelectLocation = (value?: Location) => {
+    this.setState({locationWoeid: value ? value.woeid : undefined });
+  };
 
-    <div className="App">
-      <CitySearch onSelect={onSelectLocation} browserCoordinates={coords} />
-      {
-        location 
-        ? (<ForecastLayout location={location} />
-        )
-        : <div />
-        // <CircularProgress color="secondary" style={{ marginLeft: '45%', marginTop: '15px'}} />
-      }
-      
-      <Footer />
-    </div>
-    // </AppWrapper>
+  public render() {
+    return (
+      <div className="App">
+        <CitySearch onSelect={this.onSelectLocation} />
+        {!!this.state.locationWoeid
+          ? (<ForecastLayout 
+              woeid={this.state.locationWoeid}
+            />
+          )
+          : <div />
+        }
+        <Footer />
+      </div>
   );
+  }
+
 };
 
 export default App;
