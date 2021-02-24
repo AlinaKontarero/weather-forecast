@@ -7,8 +7,8 @@ describe('ForecastLayout Component', () => {
   let component =  <ForecastLayout woeid={2122265} />
  
   beforeEach(() => {
-    render(<App />);
     global.alert = jest.fn();
+    render(<App />);
     });  
   
   it('should render with given props', () => {
